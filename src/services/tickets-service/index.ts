@@ -23,8 +23,6 @@ async function createTicket(ticketTypeId: number,userId:number) {
 
   const enrollmentUser = await ticketRepository.findUserEnrollment(userId);
 
-  console.log(enrollmentUser)
-
   if(!enrollmentUser) throw notFoundError()
 
   await ticketRepository.createTicket(ticketTypeId, enrollmentUser.id)
