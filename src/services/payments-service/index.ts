@@ -26,7 +26,9 @@ async function createPayments(paymentData: any,userId:number) {
 
   if (userId !== findUserData.userId) throw unauthorizedError();
   
-  await paymentRepository.createPayment(paymentData,ticketPrice.price) && await paymentRepository.updateTicketStatus(findTicket.id)
+  await paymentRepository.createPayment(paymentData,ticketPrice.price)
+  
+  await paymentRepository.updateTicketStatus(findTicket.id)
 
   const confirmPaymentData = await paymentRepository.findPaymentData(paymentData.ticketId)
 
