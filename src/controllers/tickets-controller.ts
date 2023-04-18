@@ -28,8 +28,11 @@ export async function getTicketByUser(req: AuthenticatedRequest, res: Response) 
 
 export async function createNewTicket(req: AuthenticatedRequest, res: Response) {
   const { ticketTypeId } = req.body;
+  const {userId} = req
   try {
-    const result = await ticketsService.createTicket(ticketTypeId);
+    const createTicket = await ticketsService.createTicket(ticketTypeId,userId);
+
+    res.status(httpStatus.CREATED).send(createTicket)
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }

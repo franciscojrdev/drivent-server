@@ -9,15 +9,29 @@ async function getTicketsByType(): Promise<TicketType[]> {
 }
 
 async function getTicket(userId: number) {
-  const ticketData = await ticketRepository.findTicket(userId);
 
-  if (!ticketData) throw notFoundError();
+  const enrollmentUser = await ticketRepository.findUserEnrollment(userId) 
+
+  const ticketData = await ticketRepository.findTicket(enrollmentUser.id);
+
+  if (!ticketData || !enrollmentUser) throw notFoundError();
 
   return ticketData;
 }
 
-async function createTicket(ticketTypeId: number) {
-  const ticketResponse = await ticketRepository.createTicket(ticketTypeId);
+async function createTicket(ticketTypeId: number,userId:number) {
+
+  const enrollmentUser = await ticketRepository.findUserEnrollment(userId);
+
+  console.log(enrollmentUser)
+
+  if(!enrollmentUser) throw notFoundError()
+
+  await ticketRepository.createTicket(ticketTypeId, enrollmentUser.id)
+
+  const ticketData = await ticketRepository.findTicket(enrollmentUser.id)
+
+  return ticketData
 }
 
 const ticketsService = {
