@@ -6,14 +6,12 @@ import supertest from 'supertest';
 import {
   createEnrollmentWithAddress,
   createUser,
-  createTicketType,
   createTicket,
   createTicketTypeTrue,
   createHotel,
   createRooms,
 } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
-import { prisma } from '@/config';
 import app, { init } from '@/app';
 
 beforeAll(async () => {
@@ -131,34 +129,6 @@ describe('GET /hotels', () => {
         ]),
       );
     });
-    // it('should respond with status 200 and with ticket data', async () => {
-    //   const user = await createUser();
-    //   const token = await generateValidToken(user);
-    //   const enrollment = await createEnrollmentWithAddress(user);
-    //   const ticketType = await createTicketType();
-    //   const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
-
-    //   const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
-
-    //   expect(response.status).toEqual(httpStatus.OK);
-    //   expect(response.body).toEqual({
-    //     id: ticket.id,
-    //     status: ticket.status,
-    //     ticketTypeId: ticket.ticketTypeId,
-    //     enrollmentId: ticket.enrollmentId,
-    //     TicketType: {
-    //       id: ticketType.id,
-    //       name: ticketType.name,
-    //       price: ticketType.price,
-    //       isRemote: ticketType.isRemote,
-    //       includesHotel: ticketType.includesHotel,
-    //       createdAt: ticketType.createdAt.toISOString(),
-    //       updatedAt: ticketType.updatedAt.toISOString(),
-    //     },
-    //     createdAt: ticket.createdAt.toISOString(),
-    //     updatedAt: ticket.updatedAt.toISOString(),
-    //   });
-    // });
   });
 });
 
@@ -299,32 +269,6 @@ describe('GET /hotels/:hotelId', () => {
             }),
           ]),
         }),
-      );
-    });
-
-    it('should respon with status 200 and with hotels data', async () => {
-      const toogleBoolean: boolean = true;
-      const user = await createUser();
-      const token = await generateValidToken(user);
-      const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketTypeTrue(toogleBoolean);
-      await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
-
-      const hotel = await createHotel();
-
-      const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toEqual(httpStatus.OK);
-      expect(response.body).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: hotel.id,
-            name: hotel.name,
-            image: hotel.image,
-            createdAt: hotel.createdAt.toISOString(),
-            updatedAt: hotel.updatedAt.toISOString(),
-          }),
-        ]),
       );
     });
   });
