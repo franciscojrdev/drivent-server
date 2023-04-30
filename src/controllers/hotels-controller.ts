@@ -21,7 +21,7 @@ export async function getHotelsRooms(req: AuthenticatedRequest, res: Response, n
   if(!hotelId) throw badRequest()
 
   try {
-    const hotelRooms = await hotelsService.getHotelsRooms(hotelId,userId)
+    const hotelRooms = await hotelsService.getHotelsWithRooms(userId,hotelId)
     res.status(httpStatus.OK).send(hotelRooms)
   } catch (e) {
     next(e);
