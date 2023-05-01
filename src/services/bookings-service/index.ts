@@ -20,10 +20,10 @@ async function listHotels(userId: number) {
 async function verifyRoom(roomId:number){
     const room = await roomRepository.findRoom(roomId)
 
-    const allBookings = await bookingRepository.findAllBookings(room.id)
-
     if(!room) throw notFoundError()
-
+    
+    const allBookings = await bookingRepository.findAllBookings(room.id)
+    
     if(room.capacity === allBookings.length) throw forbiddenError()
 }
 
@@ -57,8 +57,6 @@ async function updateBooking(roomId:number,userId:number,bookingId:number) {
     if(!findBooking || findBooking.userId !== userId) throw forbiddenError()
 
     const {id} = await bookingRepository.updateBooking(bookingId,roomId)
-
-    console.log(id)
 
     return id
 }

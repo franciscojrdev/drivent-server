@@ -21,7 +21,7 @@ export async function createBooking(req:AuthenticatedRequest,res:Response,next:N
 
     try {
         const bookingId = await bookingsService.createBooking(userId,roomId)
-        res.status(httpStatus.OK).send(bookingId)
+        res.status(httpStatus.OK).send({bookingId})
     } catch (e) {
         next(e)
     }
@@ -31,11 +31,10 @@ export async function updateBooking(req:AuthenticatedRequest,res:Response,next:N
     const {userId} = req 
     const {roomId} = req.body as RoomIdBody
     const {bookingId} = req.params
-
-    if(!bookingId) throw badRequest()
+  
     try {
         const booking = await bookingsService.updateBooking(roomId,userId,Number(bookingId))
-        res.status(httpStatus.OK).send(booking)
+        res.status(httpStatus.OK).send({booking})
     } catch (e) {
         next(e)
     }
