@@ -1,7 +1,7 @@
 import { badRequest } from "@/errors";
 import { AuthenticatedRequest } from "@/middlewares";
 import { RoomIdBody } from "@/protocols";
-import bookingsService from "@/services/bookings-service";
+import bookingsService from "@/services/booking-service";
 import { NextFunction, Response } from "express";
 import httpStatus from "http-status";
 
@@ -34,7 +34,7 @@ export async function updateBooking(req:AuthenticatedRequest,res:Response,next:N
   
     try {
         const booking = await bookingsService.updateBooking(roomId,userId,Number(bookingId))
-        res.status(httpStatus.OK).send({booking})
+        res.status(httpStatus.OK).send({bookingId:booking})
     } catch (e) {
         next(e)
     }
