@@ -1,15 +1,29 @@
 import { notFoundError } from "@/errors"
 import bookingRepository from "@/repositories/booking-repository"
-import hotelsService from "../hotels-service"
 import roomRepository from "@/repositories/rooms-repository"
 import { forbiddenError } from "@/errors/forbidden-error"
+import enrollmentRepository from "@/repositories/enrollment-repository"
+import ticketsRepository from "@/repositories/tickets-repository"
 
-
+async function listHotels(userId: number) {
+    const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
+    if (!enrollment) {
+      throw notFoundError();
+    }
+    const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
+  
+    if (!ticket || ticket.status === 'RESERVED' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel) {
+      throw forbiddenError();
+    }
+  }
+  
 async function verifyRoom(roomId:number){
     const room = await roomRepository.findRoom(roomId)
+
     const allBookings = await bookingRepository.findAllBookings(room.id)
 
     if(!room) throw notFoundError()
+
     if(room.capacity === allBookings.length) throw forbiddenError()
 }
 
@@ -23,14 +37,9 @@ async function getBooking(userId:number) {
 
 async function createBooking(userId:number,roomId:number){
 
-    await hotelsService.listHotels(userId)
+    await listHotels(userId)
 
     await verifyRoom(roomId)
-    // const room = await roomRepository.findRoom(roomId)
-    // const allBookings = await bookingRepository.findAllBookings(room.id)
-    
-    // if(!room) throw notFoundError()
-    // if(room.capacity === allBookings.length) throw forbiddenError()
     
     await bookingRepository.createBooking(userId,roomId)
 
